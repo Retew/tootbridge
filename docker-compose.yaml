@@ -1,0 +1,14 @@
+version: "3"
+services:
+  tootbridge-relay:
+    environment:
+      SLEEP_DURATION: 60
+      TWITTER_API_URL: ""
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "./credentials.json:/src/credentials.json"
+    restart: unless-stopped

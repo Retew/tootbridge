@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "Tootbridge"
+version = "0.1.0"
+description = "A simple app to relay Tweets to the Mastodon using Twitter API"
+authors = ["Tootbridge @TootBridge@mastodon.social"]
+license = "GPLv3"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+httpx = "^0.23.0"
+loguru = "^0.6.0"
+
+[tool.poetry.dev-dependencies]
+black = "^22.6.0"
+mypy = "^0.971"
+flake8 = "^5.0.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
