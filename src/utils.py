@@ -26,16 +26,13 @@ def _remove_warnings(source_text: str) -> str:
 async def _unshorten_link(link: str, session: httpx.AsyncClient) -> str:
     """Unshorten a shortlink"""
     # TODO: Replace with a custom local solution to escape the limits
-    url = f"https://unshorten.me/json/{link}"
     try:
-        response = await session.get(url, follow_redirects=True, timeout=10)
+        response = await session.get(link, timeout=10)
         if response.is_error:
             raise ConnectionError()
-        response_dict = response.json()
-        if not response_dict.get("success", False):
-            error_message = response_dict.get("error", "No error message")
-            raise ValueError(f"Server returned an error: '{error_message}'")
-        target_link = response_dict.get("resolved_url", "")
+        if response.status_code > 311 && response.status_code < 200:
+            raise ValueError(f"Server returned an error: '{response.status_code}'")
+        target_link = response.headers["Location"]
         if not target_link:
             raise ValueError("Server returned an empty link")
         return target_link
