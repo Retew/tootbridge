@@ -10,7 +10,7 @@ def _remove_warnings(source_text: str) -> str:
     """Remove all foreign agent warnings from the tweet if any"""
     # TODO: Add more warnings to recognize
     # FIXME: Far too computationally expensive
-    warning_text = "ДАННОЕ СООБЩЕНИЕ (МАТЕРИАЛ) СОЗДАНО И (ИЛИ) РАСПРОСТРАНЕНО ИНОСТРАННЫМ СРЕДСТВОМ МАССОВОЙ ИНФОРМАЦИИ, ВЫПОЛНЯЮЩИМ ФУНКЦИИ ИНОСТРАННОГО АГЕНТА, И (ИЛИ) РОССИЙСКИМ ЮРИДИЧЕСКИМ ЛИЦОМ, ВЫПОЛНЯЮЩИМ ФУНКЦИИ ИНОСТРАННОГО АГЕНТА."
+    warning_text = "ДАННОЕ СООБЩЕНИЕ (МАТЕРИАЛ) СОЗДАНО И (ИЛИ) РАСПРОСТРАНЕНО ИНОСТРАННЫМ СРЕДСТВОМ МАССОВОЙ ИНФОРМАЦИИ, ВЫПОЛНЯЮЩИМ ФУНКЦИИ ИНОСТРАННОГО АГЕНТА, И (ИЛИ) РОССИЙСКИМ ЮРИДИЧЕСКИМ ЛИЦОМ, ВЫПОЛНЯЮЩИМ ФУНКЦИИ ИНОСТРАННОГО АГЕНТА"
     warning_text = warning_text.lower()
     if warning_text not in source_text.lower():
         return source_text
@@ -18,7 +18,7 @@ def _remove_warnings(source_text: str) -> str:
     start = text.find(warning_text.lower())
     end = start + len(warning_text)
     new_text = source_text[:start] + source_text[end:]
-    new_text = new_text.strip("\n").strip()
+    new_text = new_text.strip(".").strip("\n").strip()
     new_text = re.sub(r"[\n ]{2,}", "", new_text)
     return _remove_warnings(new_text)
 
