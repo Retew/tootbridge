@@ -25,14 +25,11 @@ def _remove_warnings(source_text: str) -> str:
 
 async def _unshorten_link(link: str, session: httpx.AsyncClient) -> str:
     """Unshorten a shortlink"""
-    # TODO: Replace with a custom local solution to escape the limits
     try:
         response = await session.head(link, timeout=10)
         if response.is_error:
-            raise ConnectionError()
-        if response.status_code > 311 && response.status_code < 200:
-            raise ValueError(f"Server returned an error: '{response.status_code}'")
-        target_link = response.headers["Location"]
+            raise ConnectionError(f"Server returned an error: '{response.status_code}'")
+        target_link: str = response.headers.get("Location", "")
         if not target_link:
             raise ValueError("Server returned an empty link")
         return target_link
