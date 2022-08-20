@@ -27,7 +27,7 @@ async def _unshorten_link(link: str, session: httpx.AsyncClient) -> str:
     """Unshorten a shortlink"""
     # TODO: Replace with a custom local solution to escape the limits
     try:
-        response = await session.get(link, timeout=10)
+        response = await session.head(link, timeout=10)
         if response.is_error:
             raise ConnectionError()
         if response.status_code > 311 && response.status_code < 200:
