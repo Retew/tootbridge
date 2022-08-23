@@ -6,23 +6,6 @@ from loguru import logger
 from Tweet import Tweet
 
 
-def _remove_warnings(source_text: str) -> str:
-    """Remove all foreign agent warnings from the tweet if any"""
-    # TODO: Add more warnings to recognize
-    # FIXME: Far too computationally expensive
-    warning_text = "ДАННОЕ СООБЩЕНИЕ (МАТЕРИАЛ) СОЗДАНО И (ИЛИ) РАСПРОСТРАНЕНО ИНОСТРАННЫМ СРЕДСТВОМ МАССОВОЙ ИНФОРМАЦИИ, ВЫПОЛНЯЮЩИМ ФУНКЦИИ ИНОСТРАННОГО АГЕНТА, И (ИЛИ) РОССИЙСКИМ ЮРИДИЧЕСКИМ ЛИЦОМ, ВЫПОЛНЯЮЩИМ ФУНКЦИИ ИНОСТРАННОГО АГЕНТА"
-    warning_text = warning_text.lower()
-    if warning_text not in source_text.lower():
-        return source_text
-    text = source_text.lower()
-    start = text.find(warning_text.lower())
-    end = start + len(warning_text)
-    new_text = source_text[:start] + source_text[end:]
-    new_text = new_text.strip(".").strip("\n").strip()
-    new_text = re.sub(r"[\n ]{2,}", "", new_text)
-    return _remove_warnings(new_text)
-
-
 async def _unshorten_link(link: str, session: httpx.AsyncClient) -> str:
     """Unshorten a shortlink"""
     try:
@@ -49,7 +32,7 @@ async def _unshorten_links(text: str, session: httpx.AsyncClient) -> str:
 
 async def prepare_text(tweet: Tweet, session: httpx.AsyncClient) -> str:
     """Prepare status text before posting"""
-    status_text = _remove_warnings(tweet.text)
+    status_text = tweet.text
     status_text = await _unshorten_links(status_text, session)
     status_text = f"{status_text}\n\nИсточник: {tweet.source_url}"
     return status_text
