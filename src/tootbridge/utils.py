@@ -1,3 +1,4 @@
+import asyncio
 import re
 
 import httpx
@@ -23,10 +24,13 @@ async def _unshorten_link(link: str, session: httpx.AsyncClient) -> str:
 
 async def _unshorten_links(text: str, session: httpx.AsyncClient) -> str:
     """Find all the Twitter-shortened links in the text and unshorten them"""
-    link_pattern = r"https://t.co/[a-zA-Z0-9]+"
-    for link in re.findall(link_pattern, text):
-        replacement = await _unshorten_link(link, session)
-        text = text.replace(link, replacement)
+    shorteners = ["t.co", "ift.tt"]
+    link_pattern = rf"https://(?:{'|'.join(shorteners)})/[a-zA-Z0-9]+"
+    if links := list(re.findall(link_pattern, text)):
+        tasks = (_unshorten_link(link, session) for link in links)
+        replacements = await asyncio.gather(*tasks)
+        for link, replacement in zip(links, replacements):
+            text = text.replace(link, replacement)
     return text
 
 
