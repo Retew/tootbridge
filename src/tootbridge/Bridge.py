@@ -5,8 +5,8 @@ from dataclasses import dataclass, field
 import httpx
 from loguru import logger
 
-from Tweet import Tweet
-from utils import prepare_text
+from .Tweet import Tweet
+from .utils import prepare_text
 
 
 @dataclass

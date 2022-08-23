@@ -3,7 +3,7 @@ import re
 import httpx
 from loguru import logger
 
-from Tweet import Tweet
+from .Tweet import Tweet
 
 
 async def _unshorten_link(link: str, session: httpx.AsyncClient) -> str:
