@@ -27,9 +27,16 @@ class Bridge:
 
     async def _gather_new_tweets(self, client_: httpx.AsyncClient) -> None:
         """Retrieve latest tweets"""
-        response = await client_.get(
-            f"{self.twitter_api_url}/{self.twitter_acc_username}"
-        )
+        try:
+            response = await client_.get(
+                f"{self.twitter_api_url}/{self.twitter_acc_username}",
+                timeout=60,
+            )
+        except Exception as e:
+            logger.error(
+                f"Error retrieving new tweets for @{self.twitter_acc_username}. {e}"
+            )
+            return
 
         if response.is_error:
             logger.error(
